@@ -16,7 +16,8 @@ public class Controller implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		System.out.println(departamentoService.listarDepartamentos());
+		departamentoService.deletarDepartamento(2);
+
 	}
 
 }

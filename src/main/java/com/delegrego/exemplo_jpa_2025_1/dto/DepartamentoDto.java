@@ -7,8 +7,8 @@ public class DepartamentoDto {
 
 	private int idDepartamento;
 
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "Nome do departamento não pode ser vazio")
+	@Size(max = 50, message = "Departamento não pode ultrapassar 50 caracteres")
 	private String nmDepartamento;
 
 	public DepartamentoDto(int idDepartamento, String nmDepartamento) {

@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.delegrego.exemplo_jpa_2025_1.dto.DepartamentoDto;
 import com.delegrego.exemplo_jpa_2025_1.entity.DepartamentoEntity;
 import com.delegrego.exemplo_jpa_2025_1.repo.DepartamentoRepository;
 
+import jakarta.validation.Valid;
+
 @Service
+@Validated
 public class DepartamentoService {
 
 	@Autowired
@@ -19,7 +23,7 @@ public class DepartamentoService {
 	// CRUD
 
 	// Create
-	public void cadastrarDepartamento(DepartamentoDto departamentoDto) {
+	public void cadastrarDepartamento(@Valid DepartamentoDto departamentoDto) {
 
 		DepartamentoEntity departamentoEntity = new DepartamentoEntity();
 
@@ -50,11 +54,12 @@ public class DepartamentoService {
 	}
 
 	// Update
-	public void atualizarDepartamento(int id, DepartamentoDto departamentoDto) {
+	public void atualizarDepartamento(int id, @Valid DepartamentoDto departamentoDto) {
 
-		DepartamentoEntity departamentoEntity = new DepartamentoEntity();
+		DepartamentoEntity departamentoEntity = departamentoRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Departamento não existe"));
 
-		departamentoEntity.setIdDepartamento(id);
+		// departamentoEntity.setIdDepartamento(id);
 		departamentoEntity.setNmDepartamento(departamentoDto.getNmDepartamento());
 
 		departamentoRepo.save(departamentoEntity);
@@ -62,6 +67,9 @@ public class DepartamentoService {
 
 	// Delete
 	public void deletarDepartamento(int id) {
+
+		departamentoRepo.findById(id).orElseThrow(() -> new RuntimeException("Departamento não existe"));
+
 		departamentoRepo.deleteById(id);
 	}
 

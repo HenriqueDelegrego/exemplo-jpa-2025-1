@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.delegrego.exemplo_jpa_2025_1.dto.FuncionarioDto;
 import com.delegrego.exemplo_jpa_2025_1.entity.DepartamentoEntity;
@@ -13,7 +14,10 @@ import com.delegrego.exemplo_jpa_2025_1.entity.FuncionarioEntity;
 import com.delegrego.exemplo_jpa_2025_1.repo.DepartamentoRepository;
 import com.delegrego.exemplo_jpa_2025_1.repo.FuncionarioRepository;
 
+import jakarta.validation.Valid;
+
 @Service
+@Validated
 public class FuncionarioService {
 
 	@Autowired
@@ -23,9 +27,14 @@ public class FuncionarioService {
 	private DepartamentoRepository departamentoRepo;
 
 	// Create
-	public void cadastrarFuncionario(FuncionarioDto funcionarioDto) {
+	public void cadastrarFuncionario(@Valid FuncionarioDto funcionarioDto) {
 
-		Optional<DepartamentoEntity> departamento = departamentoRepo.findById(funcionarioDto.getIdDepartamento());
+		if (funcionarioRepo.existsByEmail(funcionarioDto.getEmail())) {
+			throw new RuntimeException("Email já cadastrado");
+		}
+
+		DepartamentoEntity departamento = departamentoRepo.findById(funcionarioDto.getIdDepartamento())
+				.orElseThrow(() -> new RuntimeException("Departamento não existe"));
 
 		FuncionarioEntity funcionarioEntity = new FuncionarioEntity();
 
@@ -33,7 +42,7 @@ public class FuncionarioService {
 		funcionarioEntity.setEmail(funcionarioDto.getEmail());
 		funcionarioEntity.setSenha(funcionarioDto.getSenha());
 		funcionarioEntity.setSalario(funcionarioDto.getSalario());
-		funcionarioEntity.setDepartamento(departamento.get());
+		funcionarioEntity.setDepartamento(departamento);
 
 		funcionarioRepo.save(funcionarioEntity);
 
@@ -65,24 +74,33 @@ public class FuncionarioService {
 	}
 
 	// Update
-	public void atualizarFuncionario(int id, FuncionarioDto funcionarioDto) {
+	public void atualizarFuncionario(int id, @Valid FuncionarioDto funcionarioDto) {
 
-		Optional<DepartamentoEntity> departamento = departamentoRepo.findById(funcionarioDto.getIdDepartamento());
+		FuncionarioEntity funcionarioEntity = funcionarioRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
 
-		FuncionarioEntity funcionarioEntity = new FuncionarioEntity();
+		if (funcionarioRepo.existsByEmailAndIdFuncionarioNot(funcionarioDto.getEmail(), id)) {
+			throw new RuntimeException("Email já cadastrado");
+		}
+
+		DepartamentoEntity departamento = departamentoRepo.findById(funcionarioDto.getIdDepartamento())
+				.orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
 
 		funcionarioEntity.setIdFuncionario(id);
 		funcionarioEntity.setNome(funcionarioDto.getNome());
 		funcionarioEntity.setEmail(funcionarioDto.getEmail());
 		funcionarioEntity.setSenha(funcionarioDto.getSenha());
 		funcionarioEntity.setSalario(funcionarioDto.getSalario());
-		funcionarioEntity.setDepartamento(departamento.get());
+		funcionarioEntity.setDepartamento(departamento);
 
 		funcionarioRepo.save(funcionarioEntity);
 	}
 
 	// Delete
 	public void deletarFuncionario(int id) {
+
+		funcionarioRepo.findById(id).orElseThrow(() -> new RuntimeException("Funcionário não existe"));
+
 		funcionarioRepo.deleteById(id);
 	}
 

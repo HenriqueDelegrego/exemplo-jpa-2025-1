@@ -26,6 +26,7 @@ public class FuncionarioDto {
 	@Digits(integer = 10, fraction = 2, message = "Salário do funcionário inválido")
 	@PositiveOrZero(message = "Salário do funcionário não pode ser negativo")
 	private double salario;
+	
 	private int idDepartamento;
 
 	public FuncionarioDto() {

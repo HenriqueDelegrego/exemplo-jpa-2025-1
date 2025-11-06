@@ -14,23 +14,13 @@ public class Controller implements CommandLineRunner {
 
 	@Autowired
 	private DepartamentoService departamentoService;
-	
+
 	@Autowired
 	FuncionarioService funcionarioService;
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		FuncionarioDto funcionario = new FuncionarioDto();
-		
-		funcionario.setNome("Henrique Delegrego");
-		funcionario.setEmail("henrique@email.com");
-		funcionario.setSenha("senha");
-		funcionario.setSalario(50000);
-		funcionario.setIdDepartamento(1);
-		
-			
-		funcionarioService.atualizarFuncionario(1, funcionario);
+		departamentoService.deletarDepartamento(1);
 	}
 
 }

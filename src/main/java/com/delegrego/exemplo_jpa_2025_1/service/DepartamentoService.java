@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import com.delegrego.exemplo_jpa_2025_1.dto.DepartamentoDto;
 import com.delegrego.exemplo_jpa_2025_1.entity.DepartamentoEntity;
 import com.delegrego.exemplo_jpa_2025_1.repo.DepartamentoRepository;
+import com.delegrego.exemplo_jpa_2025_1.repo.FuncionarioRepository;
 
 import jakarta.validation.Valid;
 
@@ -19,6 +20,9 @@ public class DepartamentoService {
 
 	@Autowired
 	private DepartamentoRepository departamentoRepo;
+
+	@Autowired
+	private FuncionarioRepository funcionarioRepository;
 
 	// CRUD
 
@@ -69,6 +73,10 @@ public class DepartamentoService {
 	public void deletarDepartamento(int id) {
 
 		departamentoRepo.findById(id).orElseThrow(() -> new RuntimeException("Departamento não existe"));
+
+		if (funcionarioRepository.existsByDepartamentoIdDepartamento(id)) {
+			throw new RuntimeException("Não pode deletar departamentos com funcionários");
+		}
 
 		departamentoRepo.deleteById(id);
 	}

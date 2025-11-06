@@ -9,5 +9,7 @@ public interface FuncionarioRepository extends JpaRepository<FuncionarioEntity, 
 	boolean existsByEmail(String email);
 
 	boolean existsByEmailAndIdFuncionarioNot(String email, int id);
+	
+	boolean existsByDepartamentoIdDepartamento(int idDepartamento);
 
 }

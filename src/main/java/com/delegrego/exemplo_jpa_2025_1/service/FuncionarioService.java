@@ -9,22 +9,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.delegrego.exemplo_jpa_2025_1.dto.FuncionarioDto;
+import com.delegrego.exemplo_jpa_2025_1.dto.FuncionarioResponseDto;
 import com.delegrego.exemplo_jpa_2025_1.entity.DepartamentoEntity;
 import com.delegrego.exemplo_jpa_2025_1.entity.FuncionarioEntity;
 import com.delegrego.exemplo_jpa_2025_1.repo.DepartamentoRepository;
 import com.delegrego.exemplo_jpa_2025_1.repo.FuncionarioRepository;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Validated
+@RequiredArgsConstructor
 public class FuncionarioService {
 
-	@Autowired
-	private FuncionarioRepository funcionarioRepo;
+	private final FuncionarioRepository funcionarioRepo;
 
-	@Autowired
-	private DepartamentoRepository departamentoRepo;
+	private final DepartamentoRepository departamentoRepo;
 
 	// Create
 	public void cadastrarFuncionario(@Valid FuncionarioDto funcionarioDto) {
@@ -49,21 +50,21 @@ public class FuncionarioService {
 	}
 
 	// Read
-	public List<FuncionarioDto> listarFuncionarios() {
+	public List<FuncionarioResponseDto> listarFuncionarios() {
 
 		List<FuncionarioEntity> listaFuncionariosEntity = funcionarioRepo.findAll();
 
-		List<FuncionarioDto> listaFuncionarioDto = new ArrayList<>();
+		List<FuncionarioResponseDto> listaFuncionarioDto = new ArrayList<>();
 
 		for (FuncionarioEntity f : listaFuncionariosEntity) {
 
-			FuncionarioDto funcionarioDto = new FuncionarioDto();
+			FuncionarioResponseDto funcionarioDto = new FuncionarioResponseDto();
 			funcionarioDto.setIdFuncionario(f.getIdFuncionario());
 			funcionarioDto.setNome(f.getNome());
 			funcionarioDto.setEmail(f.getEmail());
-			funcionarioDto.setSenha(f.getSenha());
+			// funcionarioDto.setSenha(f.getSenha());
 			funcionarioDto.setSalario(f.getSalario());
-			funcionarioDto.setIdDepartamento(f.getDepartamento().getIdDepartamento());
+			funcionarioDto.setNomeDepartamento(f.getDepartamento().getNmDepartamento());
 
 			listaFuncionarioDto.add(funcionarioDto);
 

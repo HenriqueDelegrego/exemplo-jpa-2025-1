@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.delegrego.exemplo_jpa_2025_1.dto.DepartamentoDto;
 import com.delegrego.exemplo_jpa_2025_1.dto.FuncionarioDto;
+import com.delegrego.exemplo_jpa_2025_1.dto.FuncionarioResponseDto;
 import com.delegrego.exemplo_jpa_2025_1.service.DepartamentoService;
 import com.delegrego.exemplo_jpa_2025_1.service.FuncionarioService;
 
@@ -16,11 +17,15 @@ public class Controller implements CommandLineRunner {
 	private DepartamentoService departamentoService;
 
 	@Autowired
-	FuncionarioService funcionarioService;
+	private FuncionarioService funcionarioService;
 
 	@Override
 	public void run(String... args) throws Exception {
-		departamentoService.deletarDepartamento(1);
+
+		for (FuncionarioResponseDto f : funcionarioService.listarFuncionarios()) {
+			System.out.println(f);
+		}
+
 	}
 
 }
